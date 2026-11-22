@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kyber Detektiv – interaktivní vzdělávací hra o kyberbezpečnosti. Naučte se rozpoznat phishing, smishing, falešné e-shopy a sociální inženýrství.">
+  <meta name="keywords" content="kyberbezpečnost, phishing, smishing, vzdělávací hra, kyber detektiv">
+  <meta name="author" content="Kyber Detektiv">
+  <title>Kyber Detektiv – Rozpoznej podvod</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="particles-bg" aria-hidden="true"></div>
+
+  <!-- ═══════════ ÚVODNÍ OBRAZOVKA ═══════════ -->
+  <main id="welcome-screen" class="screen active">
+    <div class="screen-content">
+      <div class="logo-area">
+        <div class="shield-icon" aria-hidden="true">
+          <span class="shield-glyph">🛡️</span>
+          <div class="shield-ring"></div>
+        </div>
+        <h1 class="title-glitch" data-text="Kyber Detektiv">Kyber Detektiv</h1>
+        <p class="subtitle">Rozpoznej podvod dřív, než bude pozdě</p>
+      </div>
+      <div class="feature-cards">
+        <div class="feature-card glass-panel">
+          <span class="feature-icon">🔍</span>
+          <span>Analyzuj podezřelé zprávy</span>
+        </div>
+        <div class="feature-card glass-panel">
+          <span class="feature-icon">📊</span>
+          <span>Sleduj svůj pokrok</span>
+        </div>
+        <div class="feature-card glass-panel">
+          <span class="feature-icon">🎯</span>
+          <span>Staň se expertem na kyberbezpečnost</span>
+        </div>
+      </div>
+      <div id="history-preview" class="glass-panel history-preview hidden">
+        <h3>📈 Tvoje předchozí pokusy</h3>
+        <div id="history-list"></div>
+      </div>
+      <button id="btn-start" class="btn btn-primary btn-glow">
+        <span>Začít vyšetřování</span>
+        <span class="btn-arrow" aria-hidden="true">→</span>
+      </button>
+    </div>
+  </main>
+
+  <!-- ═══════════ VSTUPNÍ TEST ═══════════ -->
+  <section id="pretest-screen" class="screen">
+    <div class="screen-content">
+      <div class="glass-panel test-panel">
+        <div class="test-header">
+          <span class="test-badge">📋 Vstupní diagnostika</span>
+          <p class="test-desc">Než začneme, zodpověz 3 rychlé otázky. Zjistíme, co už o kyberbezpečnosti víš.</p>
+        </div>
+        <div id="pretest-progress" class="test-progress">
+          <div class="progress-step active" data-step="1">1</div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="2">2</div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="3">3</div>
+        </div>
+        <div id="pretest-question" class="test-question"></div>
+        <div id="pretest-options" class="test-options"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ HLAVNÍ HRA ═══════════ -->
+  <section id="game-screen" class="screen">
+    <div class="screen-content game-layout">
+      <header class="game-hud glass-panel">
+        <div class="hud-group">
+          <div id="lives-display" class="hud-item" aria-label="Životy">
+            <span class="heart">❤️</span>
+            <span class="heart">❤️</span>
+            <span class="heart">❤️</span>
+          </div>
+        </div>
+        <div class="hud-group hud-center">
+          <div id="level-badge" class="hud-item level-badge">
+            <span class="level-icon">🔰</span>
+            <span id="level-text">Začátečník</span>
+          </div>
+          <div id="scenario-counter" class="hud-item scenario-counter">
+            <span id="scenario-current">1</span>/<span id="scenario-total">12</span>
+          </div>
+        </div>
+        <div class="hud-group">
+          <div id="streak-display" class="hud-item streak">
+            <span class="streak-icon">🔥</span>
+            <span id="streak-count">0</span>
+          </div>
+          <div id="score-display" class="hud-item score">
+            <span class="score-icon">⭐</span>
+            <span id="score-count">0</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="investigation-hint glass-panel">
+        <span class="hint-icon">🔍</span>
+        <span>Klikni na <strong>zvýrazněné prvky</strong> ve zprávě pro odhalení skrytých detailů</span>
+      </div>
+
+      <div id="message-area" class="message-area">
+        <div id="message-container"></div>
+      </div>
+
+      <div id="decision-area" class="decision-area">
+        <button id="btn-safe" class="btn btn-safe">
+          <span class="btn-icon">✅</span>
+          <span>Bezpečné</span>
+        </button>
+        <button id="btn-danger" class="btn btn-danger">
+          <span class="btn-icon">⚠️</span>
+          <span>Podvod!</span>
+        </button>
+      </div>
+
+      <div id="explanation-panel" class="glass-panel explanation-panel hidden">
+        <div id="explanation-header" class="explanation-header">
+          <span id="explanation-icon" class="explanation-result-icon"></span>
+          <h3 id="explanation-title"></h3>
+        </div>
+        <p id="explanation-text" class="explanation-text"></p>
+        <div id="explanation-flags" class="explanation-flags"></div>
+        <button id="btn-next" class="btn btn-primary">
+          <span>Další zpráva</span>
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ ZÁVĚREČNÝ TEST ═══════════ -->
+  <section id="posttest-screen" class="screen">
+    <div class="screen-content">
+      <div class="glass-panel test-panel">
+        <div class="test-header">
+          <span class="test-badge">🎓 Závěrečná zkouška</span>
+          <p class="test-desc">Teď zjistíme, kolik ses toho naučil. Zodpověz 3 závěrečné otázky.</p>
+        </div>
+        <div id="posttest-progress" class="test-progress">
+          <div class="progress-step active" data-step="1">1</div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="2">2</div>
+          <div class="progress-line"></div>
+          <div class="progress-step" data-step="3">3</div>
+        </div>
+        <div id="posttest-question" class="test-question"></div>
+        <div id="posttest-options" class="test-options"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ VÝSLEDKOVÝ REPORT ═══════════ -->
+  <section id="results-screen" class="screen">
+    <div class="screen-content results-layout">
+      <h2 class="results-title">
+        <span class="results-icon">📊</span>
+        Report poznání
+      </h2>
+
+      <div class="results-grid">
+        <div class="glass-panel result-card improvement-card">
+          <h3>🎯 Zlepšení znalostí</h3>
+          <div class="improvement-visual">
+            <div class="improvement-bar">
+              <div class="bar-label">Vstupní test</div>
+              <div class="bar-track">
+                <div id="pretest-bar" class="bar-fill bar-pretest" style="width:0%"></div>
+              </div>
+              <span id="pretest-score-display" class="bar-value">0 %</span>
+            </div>
+            <div class="improvement-bar">
+              <div class="bar-label">Závěrečný test</div>
+              <div class="bar-track">
+                <div id="posttest-bar" class="bar-fill bar-posttest" style="width:0%"></div>
+              </div>
+              <span id="posttest-score-display" class="bar-value">0 %</span>
+            </div>
+          </div>
+          <div id="improvement-badge" class="improvement-badge"></div>
+        </div>
+
+        <div class="glass-panel result-card categories-card">
+          <h3>📂 Úspěšnost podle kategorií</h3>
+          <div id="categories-report" class="categories-report"></div>
+        </div>
+
+        <div class="glass-panel result-card stats-card">
+          <h3>🏆 Herní statistiky</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-value" id="stat-score">0</span>
+              <span class="stat-label">Celkové skóre</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="stat-correct">0/0</span>
+              <span class="stat-label">Správné odpovědi</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="stat-streak">0</span>
+              <span class="stat-label">Nejdelší série</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="stat-lives">0</span>
+              <span class="stat-label">Zbývající životy</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-panel result-card history-card">
+          <h3>📈 Historie pokusů</h3>
+          <div id="results-history" class="results-history"></div>
+        </div>
+      </div>
+
+      <button id="btn-restart" class="btn btn-primary btn-glow">
+        <span>🔄 Hrát znovu</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ═══════════ GAME OVER ═══════════ -->
+  <section id="gameover-screen" class="screen">
+    <div class="screen-content">
+      <div class="glass-panel gameover-panel">
+        <div class="gameover-icon">💔</div>
+        <h2>Konec hry</h2>
+        <p class="gameover-text">Ztratil jsi všechny životy. Ale nevěš hlavu – z chyb se člověk učí!</p>
+        <p id="gameover-stats" class="gameover-stats"></p>
+        <button id="btn-gameover-continue" class="btn btn-primary btn-glow">
+          <span>Pokračovat k závěrečnému testu</span>
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div id="tooltip" class="tooltip hidden" role="tooltip"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
